@@ -1,0 +1,35 @@
+version: '2'
+services:
+  database-zabbix:
+    image: "percona:latest"
+    expose:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix
+      MYSQL_DATABASE: zabbix
+  zabbix-web:
+    image: "zabbix/zabbix-web-apache-mysql:ubuntu-3.2-latest"
+    ports:
+      - "80:80"
+    environment:
+      DB_SERVER_HOST: database
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix
+      ZBX_SERVER_HOST: zabbix-server
+    links:
+      - zabbix-server:zabbix-server
+      - database-zabbix:database
+  zabbix-server:
+    image: "zabbix/zabbix-server-mysql:ubuntu-3.2-latest"
+    ports:
+      - "10051:10051"
+    environment:
+      DB_SERVER_HOST: database
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: zabbix
+    links:
+      - database-zabbix:database
+    depends_on:
+      - database-zabbix
