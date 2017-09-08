@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   database-zabbix:
     image: "percona:latest"
@@ -9,8 +9,10 @@ services:
       MYSQL_USER: zabbix
       MYSQL_PASSWORD: zabbix
       MYSQL_DATABASE: zabbix
+    volumes:
+        - database-volume:/var/lib/mysql
   zabbix-web:
-    image: "zabbix/zabbix-web-apache-mysql:ubuntu-3.2-latest"
+    image: "zabbix/zabbix-web-apache-mysql:ubuntu-3.4-latest"
     ports:
       - "80:80"
     environment:
@@ -22,7 +24,7 @@ services:
       - zabbix-server:zabbix-server
       - database-zabbix:database
   zabbix-server:
-    image: "zabbix/zabbix-server-mysql:ubuntu-3.2-latest"
+    image: "zabbix/zabbix-server-mysql:ubuntu-3.4-latest"
     ports:
       - "10051:10051"
     environment:
@@ -33,3 +35,5 @@ services:
       - database-zabbix:database
     depends_on:
       - database-zabbix
+volumes:
+    database-volume:
