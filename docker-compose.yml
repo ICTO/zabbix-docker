@@ -6,9 +6,6 @@ services:
       - "3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: zabbix
-      MYSQL_PASSWORD: zabbix
-      MYSQL_DATABASE: zabbix
     volumes:
         - database-volume:/var/lib/mysql
   zabbix-web:
@@ -29,8 +26,7 @@ services:
       - "10051:10051"
     environment:
       DB_SERVER_HOST: database
-      MYSQL_USER: zabbix
-      MYSQL_PASSWORD: zabbix
+      MYSQL_ROOT_PASSWORD: root
     links:
       - database-zabbix:database
     depends_on:
